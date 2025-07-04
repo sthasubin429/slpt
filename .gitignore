@@ -1,0 +1,22 @@
+# VSCode settings
+.vscode/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS folder attributes
+__MACOSX/
+
+# Python bytecode
+*.pyc
+__pycache__/
+
+# Python virtual environment
+venv/
+env/
+ENV/
