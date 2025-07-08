@@ -18,6 +18,8 @@ Group project for CPSC 4810.
 - Subin Shrestha (<sshrestha10@mylangara.ca>)
 - Thi Thu Thuy Tran (<ttran084@mylangara.ca>)
 
+## Problem Statement
+The objective of this project is to analyze telecom customer data to identify patterns and factors that contribute to customer churn. This will allow the company to take proactive steps to reduce churn and improve customer retentio
 
 ## Data Source
 - Data Set Used: [Telecom Churn Dataset](https://www.kaggle.com/datasets/jpacse/datasets-for-churn-telecom) from Kaggle.
