@@ -17,7 +17,12 @@ def get_path(*args):
 
 def load_processed_data():
     """Loads the processed telecom churn dataset."""
-    return pd.read_csv(get_path("data/raw/cell2celltrain.csv"))
+    data = pd.read_csv(get_path("data/raw/cell2celltrain.csv"))
+    data[["CreditRatingNum", "CreditRatingLabel"]] = data[
+        "CreditRating"
+    ].str.extract(r"(\d)-(.+)")
+    data["CreditRatingNum"] = data["CreditRatingNum"].astype(int)
+    return data
 
 
 def load_model():

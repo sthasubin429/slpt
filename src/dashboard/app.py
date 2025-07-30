@@ -1,76 +1,74 @@
 import streamlit as st
-import pandas as pd
 import seaborn as sns
-import matplotlib.pyplot as plt
 
-from utils import load_processed_data, load_model, predict_churn
+from chart import average_calls_by_churn_chart, churn_by_location, churn_overview_chart, credit_rating_distribution_chart, monthly_revenue_distribution_chart, monthly_revenue_vs_months_chart, retention_team_calls_vs_churn_chart, stats
+from utils import load_processed_data, load_model
+import numpy as np
+import plotly.figure_factory as ff
 
-st.set_page_config(layout="wide")
-st.title("📊 Telecom Churn Dashboard")
+st.set_page_config(
+  layout="wide",
+  page_title="Telecom Churn Dashboard",
+  page_icon="📊",
+  initial_sidebar_state="auto",
+)
+
+hide_streamlit_style = """
+  <style>
+  #MainMenu {visibility: hidden;}
+  footer {visibility: hidden;}
+  header {visibility: hidden;}
+  </style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+st.markdown(
+  """
+  <style>
+  .stApp {
+    background-color: #ffffff;
+    color: #222222;
+    padding-top: 0rem !important;
+  }
+  .block-container {
+    padding-top: 0rem !important;
+  }
+  </style>
+  """,
+  unsafe_allow_html=True,
+)
+st.markdown(
+  "<h1 style='text-align: center;'> Telecom Churn Dashboard</h1>",
+  unsafe_allow_html=True,
+)
+
+# Pastel color palette
+pastel_palette = sns.color_palette("pastel").as_hex()
 
 # Load data and model
 df = load_processed_data()
 model = load_model()
 
-# Data Overview
-st.header("🔍 Data Preview")
-st.dataframe(df.head())
+stats(df)
 
-# Churn Distribution
-st.header("📈 Churn Overview")
-churn_counts = df["Churn"].value_counts()
-st.bar_chart(churn_counts)
+row1 = st.columns(3, gap="large")
+row2 = st.columns(3, gap="large")
 
-# Monthly Revenue Distribution by Churn
-st.subheader("💵 Monthly Revenue Distribution by Churn")
-fig1, ax1 = plt.subplots()
+# --- Row 1 ---
+with row1[0]:
+    churn_overview_chart(df, pastel_palette)
+with row1[1]:
+    churn_by_location(df, pastel_palette)
+with row1[2]:
+    monthly_revenue_vs_months_chart(df, pastel_palette)
 
-# Drop NaNs for MonthlyRevenue
-df_clean_rev = df.dropna(subset=["MonthlyRevenue", "Churn"])
+# --- Row 2 ---
+with row2[0]:
+    credit_rating_distribution_chart(df, pastel_palette)
+with row2[1]:
+    retention_team_calls_vs_churn_chart(df, pastel_palette)
+with row2[2]:
+    average_calls_by_churn_chart(df, pastel_palette)
 
-sns.boxplot(data=df_clean_rev, x="Churn", y="MonthlyRevenue", ax=ax1)
-ax1.set_ylabel("Monthly Revenue ($)")
-st.pyplot(fig1)
-
-# Average Calls by Churn
-st.subheader("📞 Average Calls by Churn Status")
-call_features = ["CustomerCareCalls", "ThreewayCalls", "ReceivedCalls", "OutboundCalls"]
-avg_calls = df.groupby("Churn")[call_features].mean().T
-st.bar_chart(avg_calls)
-
-# Monthly Minutes Distribution by Churn
-st.subheader("🕒 Monthly Minutes Distribution by Churn")
-fig2, ax2 = plt.subplots()
-
-# Drop NaNs for MonthlyMinutes
-df_clean_minutes = df.dropna(subset=["MonthlyMinutes", "Churn"])
-
-sns.histplot(
-    data=df_clean_minutes, x="MonthlyMinutes", hue="Churn", bins=50, kde=True, ax=ax2
-)
-ax2.set_xlabel("Monthly Minutes")
-st.pyplot(fig2)
-
-# Feature: Service Area vs Churn
-st.subheader("🌍 Churn Rate by Service Area")
-if "ServiceArea" in df.columns:
-    df_area = df.dropna(subset=["ServiceArea", "Churn"])
-    churn_area = (
-        pd.crosstab(df_area["ServiceArea"], df_area["Churn"], normalize="index") * 100
-    )
-    st.dataframe(churn_area.style.format("{:.2f}"))
-
-# User Prediction
-st.header("🤖 Predict Churn for a New Customer")
-user_input = st.text_input(
-    "Enter comma-separated values for a customer (matching model features):"
-)
-if st.button("Predict"):
-    try:
-        input_data = pd.DataFrame(
-            [eval(user_input)], columns=df.drop("Churn", axis=1).columns
-        )
-        prediction = predict_churn(model, input_data)
-        st.success(f"Churn Prediction: {'Yes' if prediction[0] else 'No'}")
-    except Exception as e:
-        st.error(f"Error: {e}")
+# --- Full Width: Revenue Distribution ---
+monthly_revenue_distribution_chart(df, pastel_palette)

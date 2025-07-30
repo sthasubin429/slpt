@@ -34,9 +34,10 @@ slpt/
 │   │   └── cell2celltrain.csv # Original dataset file
 │   ├── interim/               # Intermediate data files
 │   └── processed/             # Processed data files
-├── notebooks/                 # Jupyter notebooks for analysis and modeling
 ├── src/                       # Source code for data processing and modeling
+│   ├── dashboard/             # Dashboard files
 ├── requirements.txt           # Python dependencies
+├── images/                    # Generated Images
 ├── README.md                  # Project documentation
 └── .gitignore                 # Git ignore file
 ```
@@ -64,3 +65,13 @@ slpt/
   ```code
   jupyter notebook
   ```
+
+## Running the Dashboard
+To run the Streamlit dashboard, execute the following command from the project root directory:
+
+```bash
+streamlit run src/dashboard.py
+```
+
+Make sure your virtual environment is activated and all dependencies are installed. The dashboard will open in your default web browser.
+A PDF version of the dashboard is also available in the `images` folder.
