@@ -70,7 +70,7 @@ slpt/
 To run the Streamlit dashboard, execute the following command from the project root directory:
 
 ```bash
-streamlit run src/dashboard.py
+streamlit run src/dashboard/app.py
 ```
 
 Make sure your virtual environment is activated and all dependencies are installed. The dashboard will open in your default web browser.
